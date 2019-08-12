@@ -7,12 +7,15 @@ uniform vec3 u_eyePos;
 uniform float u_rotY;
 uniform vec2 u_windowSize;
 
-uniform vec3 u_spherePositions[2];
+uniform vec3 u_spherePositions[255];
+uniform vec3 u_sphereColors[255];
+uniform int u_sphereCount;
 
 struct hitInfo {
 	bool hit;
 	vec3 hitPosition;
 	bool isNear;
+	int hitObjectIndex;
 };
 
 hitInfo castRay(vec3 rayPos, vec3 rayDir, float maxRayLength) {
@@ -23,25 +26,23 @@ hitInfo castRay(vec3 rayPos, vec3 rayDir, float maxRayLength) {
 
 	while(rayDistance < maxRayLength && !hitInf.hit) {
 		float smallestDistance = 0.0;
-		for(int j = 0; j < 2; ++j) {
+		int smallestIndex = 0;
+		for(int j = 0; j < u_sphereCount; ++j) {
 			float dist = length(rayPos - u_spherePositions[j]) - 1.0;
 			
 			if(j == 0) {
 				smallestDistance = dist;
 			}
 			else {
-				float smallest = smallestDistance;
-				float other = dist;
-				if(dist < smallest) {
-					smallest = dist;
-					other = smallestDistance;
+				float a = smallestDistance, b = dist, k = 0.5;
+				if(b < a) {
+					smallestIndex = j;
 				}
-				if(other > 1.0) other = 1.0;
 
-				smallestDistance = smallest * other * other;
+				float h = max( k-abs(a-b), 0.0 )/k;
+    			smallestDistance = min( a, b ) - h*h*k*(1.0/4.0);
 			}
 		}
-
 		rayDistance += smallestDistance;
 
 		rayPos += rayDir * smallestDistance;
@@ -49,6 +50,7 @@ hitInfo castRay(vec3 rayPos, vec3 rayDir, float maxRayLength) {
 		if(smallestDistance < 0.0001) {
 			hitInf.hit = true;
 			hitInf.hitPosition = rayPos;
+			hitInf.hitObjectIndex = smallestIndex;
 		}
 
 		if(smallestDistance < 0.01) {
@@ -67,22 +69,17 @@ void main() {
 
 	hitInfo hitInf = castRay(u_eyePos, rayDir, 100.0);
 
-	vec3 color = vec3(0);
+	vec3 color = vec3(0.4, 0.7, 1.0);
 	if(hitInf.hit) {
 		vec3 hitToLight = vec3(5.0, 0.0, 0.0) - hitInf.hitPosition;
 		float distToLight = length(hitToLight);
 
-		color = vec3(1.0 - (distToLight * 0.1));
+		color = u_sphereColors[hitInf.hitObjectIndex];
+		color *= vec3(1.0 - (distToLight * 0.1));
 
 		vec3 hitToLightNormalized = normalize(hitToLight);
 		hitInfo lightHitInf = castRay(hitInf.hitPosition + hitToLightNormalized * 0.1, hitToLightNormalized, distToLight);
-		// if(lightHitInf.hit) {
-		// 	color *= 0.75;
-		// }
 	}
-	// else if(hitInf.isNear) {
-	// 	color = vec3(1.0, 0.0, 0.0);
-	// }
 
 	FragColor = vec4(color, 1);
 }

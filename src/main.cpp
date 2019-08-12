@@ -2,6 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <math.h>
+#include <vector>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -130,11 +131,18 @@ int main(void) {
 	glUniform2f(windowSizeUniformLocation, windowSize[0], windowSize[1]);
 
 	int eyePosUniformLocation = glGetUniformLocation(shaderProgram, "u_eyePos");
-	int rotYUniformLocation = glGetUniformLocation(shaderProgram, "u_rotY");
+	int rotYUniformLocation = glGetUniformLocation(shaderProgram, "u_rotY"); 
 
 	int spherePositionsUniformLocation = glGetUniformLocation(shaderProgram, "u_spherePositions");
-	point spherePositions[2] = {point(-1.5, 0, -5), point(1.5, 0, -5)};
-	glUniform3fv(spherePositionsUniformLocation, 2, &spherePositions[0].x);
+	std::vector<point> spherePositions = { point(-1.25, 0, -5), point(1.25, 0, -5), point(0, 1.25, -5) };
+	glUniform3fv(spherePositionsUniformLocation, spherePositions.size(), &spherePositions[0].x);
+
+	int sphereColorsUniformLocation = glGetUniformLocation(shaderProgram, "u_sphereColors");
+	std::vector<point> sphereColors = { point(1, 0, 0), point(0, 1, 0), point(0, 0, 1) };
+	glUniform3fv(sphereColorsUniformLocation, sphereColors.size(), &sphereColors[0].x);
+
+	int sphereCountUniformLocation = glGetUniformLocation(shaderProgram, "u_sphereCount");
+	glUniform1i(sphereCountUniformLocation, spherePositions.size());
 
 	float verticies[] = {
 		-1, -1,
@@ -202,7 +210,7 @@ int main(void) {
 		rotY += deltaXpos * 0.001;
 		glUniform1f(rotYUniformLocation, rotY);
 
-		spherePositions[0].x += 0.2 * deltaTime;
+		// spherePositions[0].x += 0.5 * deltaTime;
 		glUniform3fv(spherePositionsUniformLocation, 2, &spherePositions[0].x);
 
 		glDrawArrays(GL_TRIANGLES,0, 6);
