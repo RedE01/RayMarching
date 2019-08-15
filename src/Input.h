@@ -1,15 +1,15 @@
 #pragma once
 
-class Window;
+class GLFWwindow;
 
 class Input {
 private:
-	Window* window;
+	GLFWwindow* window;
 	bool firstFrame = false;
 	float lastXpos, lastYpos;
 
 public:
-	Input(Window* window);
+	Input(GLFWwindow* window);
 
 	bool getKey(int keycode);
 	void getMouseMovement(float& x, float& y);

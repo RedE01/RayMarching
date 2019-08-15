@@ -26,7 +26,7 @@ point calculateMovement(float speed, float yAngle) {
 
 int main(void) {
 	Window window;
-	Input input(&window);
+	Input input((GLFWwindow*)window.getWindow());
 	Renderer renderer;
 
 	renderer.setUniform2f("u_windowSize", window.getWidth(), window.getHeight());
@@ -41,9 +41,6 @@ int main(void) {
 
 	point eyePos(0, 0, 0);
 	float rotY = 0.0, walkingSpeed = 1.4, sneakingSpeed = walkingSpeed * 0.5, runningSpeed = walkingSpeed * 2.0, speed = walkingSpeed;
-
-	double lastXpos = 0.0, lastYpos = 0.0;
-	bool firstFrame = true;
 
 	double lastTime = glfwGetTime(), deltaTime = 0.0;;
 
@@ -74,12 +71,11 @@ int main(void) {
 		rotY += deltaXpos * 0.001;
 		renderer.setUniform1f("u_rotY", rotY);
 
-		glDrawArrays(GL_TRIANGLES,0, 6);
+		renderer.renderFrame();
 
 		window.swapBuffer();
 		window.pollEvents();
     }
 
-    glfwTerminate();
     return 0;
 }

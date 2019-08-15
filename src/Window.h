@@ -10,6 +10,7 @@ private:
 
 public:
 	Window();
+	~Window();
 
 	bool shouldClose();
 	void setShouldClose(bool value);

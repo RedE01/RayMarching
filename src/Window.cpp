@@ -19,6 +19,10 @@ Window::Window() {
     glfwMakeContextCurrent(window);	
 }
 
+Window::~Window() {
+    glfwTerminate();
+}
+
 bool Window::shouldClose() {
 	return glfwWindowShouldClose(window);
 }
