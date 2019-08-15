@@ -1,7 +1,6 @@
 #pragma once
 #include <GL/glew.h>
 #include <string>
-#include <unordered_map>
 
 class Renderer {
 public:
@@ -9,7 +8,6 @@ public:
 
 private:
 	unsigned int vbo;
-	std::unordered_map<std::string, int> uniformLocations;
 
 public:
 	Renderer();
@@ -22,5 +20,5 @@ public:
 	void setUniform1f(std::string uniformName, float val);
 
 private:
-	int getUniformLocation(std::string& uniformName);
+	int getUniformLocation(const std::string& uniformName);
 };

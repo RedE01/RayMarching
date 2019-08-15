@@ -1,5 +1,6 @@
 #include <math.h>
 #include <vector>
+#include <iostream>
 
 #include "Renderer.h"
 #include "Window.h"
@@ -42,12 +43,21 @@ int main(void) {
 	point eyePos(0, 0, 0);
 	float rotY = 0.0, walkingSpeed = 1.4, sneakingSpeed = walkingSpeed * 0.5, runningSpeed = walkingSpeed * 2.0, speed = walkingSpeed;
 
-	double lastTime = glfwGetTime(), deltaTime = 0.0;;
+	double lastTime = glfwGetTime(), deltaTime = 0.0, timer = 0.0;
+	int fpsCounter = 0;
 
     while (!window.shouldClose()) {     
 		double currentTime = glfwGetTime();
 		deltaTime = currentTime - lastTime;
 		lastTime = currentTime;
+
+		timer += deltaTime;
+		++fpsCounter;
+		if(timer >= 1.0) {
+			std::cout << fpsCounter << std::endl;
+			fpsCounter = 0;
+			timer = 0;
+		}
 
 		if(input.getKey(GLFW_KEY_ESCAPE)) window.setShouldClose(true);
 

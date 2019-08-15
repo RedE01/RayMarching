@@ -17,6 +17,7 @@ Window::Window() {
 
 
     glfwMakeContextCurrent(window);	
+    glfwSwapInterval(1);
 }
 
 Window::~Window() {

@@ -126,7 +126,6 @@ void Renderer::setUniform1f(std::string uniformName, float val) {
 	glUniform1f(uniformLocation, val);
 }
 
-int Renderer::getUniformLocation(std::string& uniformName) {
-	int uniformLocation = glGetUniformLocation(shaderProgram, uniformName.c_str());
-	return uniformLocation;
+int Renderer::getUniformLocation(const std::string& uniformName) {
+	return glGetUniformLocation(shaderProgram, uniformName.c_str());
 }

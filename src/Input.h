@@ -5,7 +5,7 @@ class GLFWwindow;
 class Input {
 private:
 	GLFWwindow* window;
-	bool firstFrame = false;
+	bool firstFrame = true;
 	float lastXpos, lastYpos;
 
 public:
